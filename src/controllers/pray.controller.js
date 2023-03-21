@@ -11,6 +11,8 @@ const getPrayTime = (async (req, res) => {
         const data = await response.json();
         const { dateTime } = data;
 
+        console.log('FETCHED DATA = ', data);
+
         prayTimes.setMethod(method);
 
         if(method === 'month') {
@@ -30,17 +32,25 @@ const getPrayTime = (async (req, res) => {
 
 function getMonth(date, lat, lng, gmt, dst, timeFormat) {
     const times = [];
+    let day = 1;
+
     const currentDate = new Date(date);
 
     const month = currentDate.getMonth();
     const year = currentDate.getFullYear();
     const startDate = new Date(year, month, 1);
+
     const endDate = new Date(year, month+ 1, 1);
+
     const format = timeFormat ? '12hNS' : '24h';
 
     while (startDate < endDate) {
+        console.log('test log');
         const time = prayTimes.getTimes(startDate, [lat, lng], gmt, dst, format);
+        time.day = day;
+
         times.push(time);
+        day = day + 1;
         startDate.setDate(startDate.getDate() + 1);  // next day
     }
 
