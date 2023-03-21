@@ -1,0 +1,1 @@
+module.exports.prayController = require('./pray.controller');
