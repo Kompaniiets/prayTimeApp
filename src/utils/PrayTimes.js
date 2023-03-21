@@ -504,13 +504,13 @@ function PrayTimes(method) {
 
 	// get local time zone
 	getTimeZone: function(date) {
-		console.log('getTimeZone ------->');
+		// console.log('getTimeZone ------->');
 		var year = date[0];
-		console.log('year ', year);
+		// console.log('year ', year);
 		var t1 = this.gmtOffset([year, 0, 1]);
-		console.log('t1 ', t1);
+		// console.log('t1 ', t1);
 		var t2 = this.gmtOffset([year, 6, 1]);
-		console.log('t2 ', t2);
+		// console.log('t2 ', t2);
 		return Math.min(t1, t2);
 	},
 
@@ -523,15 +523,15 @@ function PrayTimes(method) {
 
 	// GMT offset for a given date
 	gmtOffset: function(date) {
-		console.log('gmtOffset ---->');
+		// console.log('gmtOffset ---->');
 		var localDate = new Date(date[0], date[1]- 1, date[2], 12, 0, 0, 0);
-		console.log('localDate = ', localDate);
+		// console.log('localDate = ', localDate);
 		var GMTString = localDate.toGMTString();
-		console.log('GMTString = ', GMTString);
+		// console.log('GMTString = ', GMTString);
 		var GMTDate = new Date(GMTString.substring(0, GMTString.lastIndexOf(' ')- 1));
-		console.log('GMTDate = ', GMTDate);
+		// console.log('GMTDate = ', GMTDate);
 		var hoursDiff = (localDate- GMTDate) / (1000* 60* 60);
-		console.log('hoursDiff = ', hoursDiff);
+		// console.log('hoursDiff = ', hoursDiff);
 		return hoursDiff;
 	},
 

@@ -9,18 +9,22 @@ const getPrayTime = (async (req, res) => {
     try {
         const response = await fetch(`${config.TIME_API_URL}?latitude=${lat}&longitude=${lng}`)
         const data = await response.json();
-        const { dateTime } = data;
+        // const { dateTime } = data;
+        const { currentLocalTime, standardUtcOffset: { seconds } } = data;
+        const timezone = seconds / 60 / 60;
 
         console.log('FETCHED DATA = ', data);
+        console.log('timezone = ', timezone);
 
         prayTimes.setMethod(method);
 
         if(method === 'month') {
-            times = getMonth(dateTime, lat, lng, gmt, dst, format);
+            times = getMonth(currentLocalTime, lat, lng, timezone, dst, format);
         } else if(method === 'year') {
-            times = getYear(2023, lat, lng, gmt, dst, format);
+            // TODO: Add year to params
+            times = getYear(2023, lat, lng, timezone, dst, format);
         } else {
-            times = prayTimes.getTimes(dateTime, [lat, lng], gmt, dst, format);
+            times = prayTimes.getTimes(currentLocalTime, [lat, lng], timezone, dst, format);
         }
 
     } catch (err) {
@@ -30,23 +34,23 @@ const getPrayTime = (async (req, res) => {
     res.json(times);
 });
 
-function getMonth(date, lat, lng, gmt, dst, timeFormat) {
+function getMonth(date, lat, lng, timezone, dst, timeFormat) {
     const times = [];
     let day = 1;
 
-    const currentDate = new Date(date);
+    // const currentDate = new Date(date);
+    const currentDate = new Date();
 
     const month = currentDate.getMonth();
     const year = currentDate.getFullYear();
     const startDate = new Date(year, month, 1);
 
-    const endDate = new Date(year, month+ 1, 1);
+    const endDate = new Date(year, month + 1, 1);
 
     const format = timeFormat ? '12hNS' : '24h';
 
     while (startDate < endDate) {
-        console.log('test log');
-        const time = prayTimes.getTimes(startDate, [lat, lng], gmt, dst, format);
+        const time = prayTimes.getTimes(startDate, [lat, lng], timezone, dst, format);
         time.day = day;
 
         times.push(time);
