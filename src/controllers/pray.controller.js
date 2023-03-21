@@ -45,6 +45,7 @@ function getMonth(date, lat, lng, gmt, dst, timeFormat) {
     const format = timeFormat ? '12hNS' : '24h';
 
     while (startDate < endDate) {
+        console.log('test log');
         const time = prayTimes.getTimes(startDate, [lat, lng], gmt, dst, format);
         time.day = day;
 
