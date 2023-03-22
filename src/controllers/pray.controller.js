@@ -55,16 +55,20 @@ function getMonth(date, coordinates, timezone, dst, dstInterval, timeFormat) {
     while (startDate < endDate) {
         const currentDate = moment(startDate).startOf('day');
         const isDstTime = currentDate.isBetween(dstStartWithoutTime, dstEndWithoutTime, null, '[]');
+        console.log('day = ', day);
+        console.log('isDstTime = ', isDstTime);
 
-        const time = prayTimes.getTimes(startDate, coordinates, timezone, 0, format);
+        let time = prayTimes.getTimes(startDate, coordinates, timezone, isDstTime ? 1 : 0, format);
 
         if(isDstTime) {
-            Object.keys(time).map(key => {
-                const timeWithDst = moment
-                    .utc(time[key], 'HH:mm')
-                    .add(1, 'hours');
-                time[key] = timeWithDst.format('HH:mm');
-            })
+            // time = addDstToTime(time);
+
+            // Object.keys(time).map(key => {
+            //     const timeWithDst = moment
+            //         .utc(time[key], 'HH:mm')
+            //         .add(1, 'hours');
+            //     time[key] = timeWithDst.format('HH:mm');
+            // });
         }
 
         time.day = day;
@@ -75,6 +79,17 @@ function getMonth(date, coordinates, timezone, dst, dstInterval, timeFormat) {
     }
 
     return times;
+}
+
+function addDstToTime(time) {
+    Object.keys(time).map(key => {
+        const timeWithDst = moment
+            .utc(time[key], 'HH:mm')
+            .add(1, 'hours');
+        time[key] = timeWithDst.format('HH:mm');
+    });
+
+    return time;
 }
 
 function getYear(year, coordinates, timezone, dst, timeFormat) {
