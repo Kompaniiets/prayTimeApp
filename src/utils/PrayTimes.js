@@ -240,35 +240,28 @@ function PrayTimes(method) {
 
 	// return prayer times for a given date
 	getTimes: function(date, coords, timezone, dst, format) {
-		console.log('start');
+		console.log('------- start --------');
 		lat = 1* coords[0];
 		lng = 1* coords[1]; 
 		elv = coords[2] ? 1* coords[2] : 0;
 		timeFormat = format || timeFormat;
 
-		console.log('date ', date);
-		console.log('coords ', coords);
-		console.log('timezone ', timezone);
-		console.log('dst ', dst);
-
-		if (date.constructor === Date) {
+		if (date.constructor === Date)
 			date = [date.getFullYear(), date.getMonth()+ 1, date.getDate()];
-			console.log('if 1 ', date);
-		}
 		if (typeof(timezone) == 'undefined' || timezone == 'auto') {
 			timezone = this.getTimeZone(date);
-			console.log('if 2 ', timezone);
+			console.log('TIMEZONE  ', timezone);
 		}
 		if (typeof(dst) == 'undefined' || dst == 'auto') {
 			dst = this.getDst(date);
-			console.log('if 3 ', date);
+			console.log('DST = ', dst);
 		}
 		timeZone = 1* timezone+ (1* dst ? 1 : 0);
 		console.log('timeZone ', timeZone)
 		jDate = this.julian(date[0], date[1], date[2])- lng/ (15* 24);
 		console.log('jDate ', jDate)
 
-		console.log('end');
+		console.log('------- end --------');
 		return this.computeTimes();
 	},
 
@@ -504,13 +497,9 @@ function PrayTimes(method) {
 
 	// get local time zone
 	getTimeZone: function(date) {
-		// console.log('getTimeZone ------->');
 		var year = date[0];
-		// console.log('year ', year);
 		var t1 = this.gmtOffset([year, 0, 1]);
-		// console.log('t1 ', t1);
 		var t2 = this.gmtOffset([year, 6, 1]);
-		// console.log('t2 ', t2);
 		return Math.min(t1, t2);
 	},
 
@@ -523,15 +512,10 @@ function PrayTimes(method) {
 
 	// GMT offset for a given date
 	gmtOffset: function(date) {
-		// console.log('gmtOffset ---->');
 		var localDate = new Date(date[0], date[1]- 1, date[2], 12, 0, 0, 0);
-		// console.log('localDate = ', localDate);
 		var GMTString = localDate.toGMTString();
-		// console.log('GMTString = ', GMTString);
 		var GMTDate = new Date(GMTString.substring(0, GMTString.lastIndexOf(' ')- 1));
-		// console.log('GMTDate = ', GMTDate);
 		var hoursDiff = (localDate- GMTDate) / (1000* 60* 60);
-		// console.log('hoursDiff = ', hoursDiff);
 		return hoursDiff;
 	},
 
