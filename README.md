@@ -7,12 +7,6 @@ $ npm install
 ## Running the app
 
 ```bash
-# development
+# start server
 $ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
