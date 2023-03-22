@@ -240,28 +240,20 @@ function PrayTimes(method) {
 
 	// return prayer times for a given date
 	getTimes: function(date, coords, timezone, dst, format) {
-		console.log('------- start --------');
 		lat = 1* coords[0];
-		lng = 1* coords[1]; 
+		lng = 1* coords[1];
 		elv = coords[2] ? 1* coords[2] : 0;
 		timeFormat = format || timeFormat;
 
 		if (date.constructor === Date)
 			date = [date.getFullYear(), date.getMonth()+ 1, date.getDate()];
-		if (typeof(timezone) == 'undefined' || timezone == 'auto') {
+		if (typeof(timezone) == 'undefined' || timezone == 'auto')
 			timezone = this.getTimeZone(date);
-			console.log('TIMEZONE  ', timezone);
-		}
-		if (typeof(dst) == 'undefined' || dst == 'auto') {
+		if (typeof(dst) == 'undefined' || dst == 'auto')
 			dst = this.getDst(date);
-			console.log('DST = ', dst);
-		}
 		timeZone = 1* timezone+ (1* dst ? 1 : 0);
-		console.log('timeZone ', timeZone)
 		jDate = this.julian(date[0], date[1], date[2])- lng/ (15* 24);
-		console.log('jDate ', jDate)
 
-		console.log('------- end --------');
 		return this.computeTimes();
 	},
 
