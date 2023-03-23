@@ -8,6 +8,10 @@ const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 const app = express();
 
+/**
+ * !!! IMPORTANT - do not remove the line below
+ * Setup timezone for remote servers witch currently set to UTC
+ */
 process.env.TZ = 'Europe/London';
 
 app.use(cors());

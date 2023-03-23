@@ -77,9 +77,9 @@ class TimeSlotsHelper {
         let day = 1;
 
         while (startDate < endDate) {
-            const isDstTime = this.#checkDstTime(startDate, dstInterval);
+            // const isDstTime = this.#checkDstTime(startDate, dstInterval);
 
-            let time = prayTimes.getTimes(startDate, coordinates, timezone, isDstTime ? 1 : 0, format);
+            let time = prayTimes.getTimes(startDate, coordinates, timezone, 'auto', format);
             time.day = day;
 
             times.push(time);
