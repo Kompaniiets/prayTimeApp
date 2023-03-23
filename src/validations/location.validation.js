@@ -1,11 +1,11 @@
 const Joi = require('joi');
-const { period, method, timeFormat } = require('../constants');
+const { dst, period, method, timeFormat } = require('../constants');
 
 const locationSchema = {
     query: Joi.object().keys({
         lat: Joi.number().required(),
         lng: Joi.number().required(),
-        dst: Joi.string(),
+        dst: Joi.valid(dst.AUTO, dst.ONE, dst.ZERO),
         gmt: Joi.number(),
         period: Joi.string().valid(period.YEAR, period.MONTH).required(),
         method: Joi.string().valid(

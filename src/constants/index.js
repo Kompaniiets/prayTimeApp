@@ -15,5 +15,10 @@ module.exports = {
     timeFormat: {
         H: 'h',
         HH: 'hh'
+    },
+    dst: {
+        AUTO: 'auto',
+        ONE: 1,
+        ZERO: 0
     }
 };

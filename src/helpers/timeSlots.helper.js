@@ -1,4 +1,3 @@
-const moment = require('moment/moment');
 const constants = require('../constants');
 const prayTimes = require('../utils/PrayTimes');
 
@@ -8,11 +7,11 @@ class TimeSlotsHelper {
      * @param date - current local date
      * @param coordinates - location coordinates
      * @param timezone - location timezone (received from https://timeapi.io)
-     * @param dstInterval - object with DST info of location (received from https://timeapi.io)
+     * @param dst - dst value ('auto', 0, 1)
      * @param timeFormat - time format to display (12h or 24)
      * @returns {*[]}
      */
-    getMonth(date, coordinates, timezone, dstInterval, timeFormat) {
+    getMonth(date, coordinates, timezone, dst, timeFormat) {
         const currentDate = new Date(date);
 
         const month = currentDate.getMonth();
@@ -20,7 +19,7 @@ class TimeSlotsHelper {
         const startDate = new Date(year, month, 1, 0, 0, 0);
         const endDate = new Date(year, month + 1, 1);
 
-        return this.#generateTimeSlots(startDate, endDate, coordinates, timezone, dstInterval, timeFormat);
+        return this.#generateTimeSlots(startDate, endDate, coordinates, timezone, dst, timeFormat);
     }
 
     /**
@@ -28,36 +27,16 @@ class TimeSlotsHelper {
      * @param year - year for generate time slots
      * @param coordinates - location coordinates
      * @param timezone - location timezone (received from https://timeapi.io)
-     * @param dstInterval - object with DST info of location (received from https://timeapi.io)
+     * @param dst - dst value ('auto', 0, 1)
      * @param timeFormat - time format to display (12h or 24)
      * @returns {*[]}
      */
-    getYear(year, coordinates, timezone, dstInterval, timeFormat) {
+    getYear(year, coordinates, timezone, dst, timeFormat) {
         const currentYear = !year ? new Date().getFullYear() : year;
         const startDate = new Date(currentYear, 0, 1);
         const endDate = new Date(currentYear + 1, 0, 1);
 
-        return this.#generateTimeSlots(startDate, endDate, coordinates, timezone, dstInterval, timeFormat);
-    }
-
-    /**
-     * Checks if the current date is in DST time
-     * @param currentDate - date for check
-     * @param dstInterval - object with DST info of location (received from https://timeapi.io)
-     * @returns {boolean}
-     */
-    #checkDstTime(currentDate, dstInterval) {
-        if(!dstInterval) {
-            return false;
-        }
-
-        const { dstStart, dstEnd } = dstInterval;
-
-        const dstStartDate = moment(dstStart).startOf('day');
-        const dstEndDate = moment(dstEnd).startOf('day');
-
-        const date = moment(currentDate).startOf('day');
-        return date.isBetween(dstStartDate, dstEndDate, null, '[]');
+        return this.#generateTimeSlots(startDate, endDate, coordinates, timezone, dst, timeFormat);
     }
 
     /**
@@ -66,20 +45,17 @@ class TimeSlotsHelper {
      * @param endDate - end date of time generation
      * @param coordinates - location coordinates
      * @param timezone - location timezone (received from https://timeapi.io)
-     * @param dstInterval - object with DST info of location (received from https://timeapi.io)
+     * @param dst - dst value ('auto', 0, 1)
      * @param timeFormat - time format to display (12h or 24)
      * @returns {*[]}
      */
-    #generateTimeSlots(startDate, endDate, coordinates, timezone, dstInterval, timeFormat) {
+    #generateTimeSlots(startDate, endDate, coordinates, timezone, dst, timeFormat) {
         const times = [];
         const format = (!timeFormat || timeFormat === constants.timeFormat.H) ? '12hNS' : '24h';
-
         let day = 1;
 
         while (startDate < endDate) {
-            // const isDstTime = this.#checkDstTime(startDate, dstInterval);
-
-            let time = prayTimes.getTimes(startDate, coordinates, timezone, 'auto', format);
+            let time = prayTimes.getTimes(startDate, coordinates, timezone, dst, format);
             time.day = day;
 
             times.push(time);
